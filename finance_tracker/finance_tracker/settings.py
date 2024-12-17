@@ -20,10 +20,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-from decouple import config
+from dotenv import load_dotenv
+import os
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=True, cast=bool)
+# Load environment variables from the .env file
+load_dotenv()
+
+# Load the secret key and debug mode from the environment
+SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
+DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', '1']
+
+# Configure Google social account providers
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -34,8 +41,8 @@ SOCIALACCOUNT_PROVIDERS = {
             'access_type': 'online',
         },
         'APP': {
-            'client_id': config('SOCIAL_AUTH_GOOGLE_CLIENT_ID'),
-            'secret': config('SOCIAL_AUTH_GOOGLE_CLIENT_SECRET'),
+            'client_id': os.getenv('SOCIAL_AUTH_GOOGLE_CLIENT_ID'),
+            'secret': os.getenv('SOCIAL_AUTH_GOOGLE_CLIENT_SECRET'),
             'key': '',
         }
     }
