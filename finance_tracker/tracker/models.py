@@ -1,11 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-import requests
-import os
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
+from .utils import convert_currency
 
 # Category choices
 EXPENSE_CATEGORIES = [
@@ -23,7 +18,6 @@ INCOME_CATEGORIES = [
     ('Others', 'Others'),
 ]
 
-
 class Expense(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -36,18 +30,9 @@ class Expense(models.Model):
 
     def convert_amount(self, to_currency):
         """
-        Converts the amount to the given currency using a currency conversion API.
+        Converts the expense amount to the given currency using a currency conversion API.
         """
-        base_currency = 'USD'
-        api_key = os.getenv('EXCHANGE_RATE_API_KEY')  # Fetch API key from .env
-        endpoint = f"https://open.er-api.com/v6/latest/{base_currency}"
-        response = requests.get(endpoint)
-        if response.status_code == 200:
-            rates = response.json().get("rates", {})
-            conversion_rate = rates.get(to_currency)
-            if conversion_rate:
-                return round(self.amount * conversion_rate, 2)
-        return self.amount  # Return the original amount if conversion fails
+        return convert_currency(self.amount, 'USD', to_currency)  # Convert from USD to user's preferred currency
 
 
 class Income(models.Model):
@@ -62,15 +47,24 @@ class Income(models.Model):
 
     def convert_amount(self, to_currency):
         """
-        Converts the amount to the given currency using a currency conversion API.
+        Converts the income amount to the given currency using a currency conversion API.
         """
-        base_currency = 'USD'
-        api_key = os.getenv('EXCHANGE_RATE_API_KEY')  # Fetch API key from .env
-        endpoint = f"https://open.er-api.com/v6/latest/{base_currency}"
-        response = requests.get(endpoint)
-        if response.status_code == 200:
-            rates = response.json().get("rates", {})
-            conversion_rate = rates.get(to_currency)
-            if conversion_rate:
-                return round(self.amount * conversion_rate, 2)
-        return self.amount
+        return convert_currency(self.amount, 'USD', to_currency)
+    
+    # models.py
+
+CURRENCY_CHOICES = [
+    ('USD', 'US Dollar'),
+    ('EUR', 'Euro'),
+    ('GBP', 'British Pound'),
+    ('KES', 'Kenyan Shilling'),
+    ('INR', 'Indian Rupee'),
+    # Add more currencies as needed
+]
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='USD')
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"
