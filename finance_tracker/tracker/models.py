@@ -51,20 +51,3 @@ class Income(models.Model):
         """
         return convert_currency(self.amount, 'USD', to_currency)
     
-    # models.py
-
-CURRENCY_CHOICES = [
-    ('USD', 'US Dollar'),
-    ('EUR', 'Euro'),
-    ('GBP', 'British Pound'),
-    ('KES', 'Kenyan Shilling'),
-    ('INR', 'Indian Rupee'),
-    # Add more currencies as needed
-]
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='USD')
-
-    def __str__(self):
-        return f"{self.user.username}'s Profile"
