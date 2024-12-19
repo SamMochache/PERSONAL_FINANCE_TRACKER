@@ -5,7 +5,7 @@ from .models import Expense, Income
 from .forms import IncomeForm, ExpenseForm
 
 
-@login_required(login_url='/accounts/google/login/')
+@login_required(login_url='/tracker/google-menu/')
 def dashboard(request):
     user = request.user
 
@@ -59,3 +59,9 @@ def home(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     return render(request, 'base.html')
+
+def google_menu(request):
+    """
+    Renders the Google login options page.
+    """
+    return render(request, 'tracker/googlemenu.html')
