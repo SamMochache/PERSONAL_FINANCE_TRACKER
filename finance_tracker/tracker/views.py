@@ -5,7 +5,7 @@ from .models import Expense, Income
 from .forms import IncomeForm, ExpenseForm
 
 
-@login_required
+@login_required(login_url='/accounts/google/login/')
 def dashboard(request):
     user = request.user
 
@@ -53,3 +53,9 @@ def add_expense(request):
     else:
         form = ExpenseForm()
     return render(request, 'tracker/add_expense.html', {'form': form})
+
+def home(request):
+    """Render the homepage."""
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    return render(request, 'base.html')

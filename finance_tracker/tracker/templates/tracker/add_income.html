@@ -1,10 +1,130 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+<style>
+    /* Styling for the Add Income page */
+    body {
+        background-color: #f7f9fc;
+        font-family: 'Arial', sans-serif;
+        color: #333;
+    }
+
+    .form-container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 40px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h1 {
+        font-size: 32px;
+        font-weight: bold;
+        color: #28a745; /* Green for income */
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-container label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .form-container .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    .form-container .form-group label {
+        margin-bottom: 8px;
+    }
+
+    .form-container .form-group input,
+    .form-container .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+        background-color: #f8f9fa;
+    }
+
+    .form-container .form-group input:focus,
+    .form-container .form-group select:focus {
+        outline: none;
+        border-color: #28a745;
+    }
+
+    .form-container button {
+        width: 100%;
+        padding: 12px;
+        background-color: #28a745; /* Green for income */
+        color: white;
+        border: none;
+        font-weight: bold;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+    }
+
+    .form-container button:hover {
+        background-color: #218838; /* Darker green on hover */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .form-container {
+            padding: 25px;
+        }
+
+        .form-container h1 {
+            font-size: 28px;
+        }
+
+        .form-container .form-group input,
+        .form-container .form-group select,
+        .form-container button {
+            padding: 10px;
+            font-size: 14px;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<h1>Add Income</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
+<div class="form-container">
+    <h1>Add Income</h1>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Amount Field -->
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            {{ form.amount }}
+        </div>
+        
+        <!-- Category Field -->
+        <div class="form-group">
+            <label for="category">Category</label>
+            {{ form.category }}
+        </div>
+        
+        <!-- Description Field -->
+        <div class="form-group">
+            <label for="description">Description</label>
+            {{ form.description }}
+        </div>
+
+        <!-- Date Field -->
+        <div class="form-group">
+            <label for="date">Date</label>
+            {{ form.date }}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit">Submit</button>
+    </form>
+</div>
 {% endblock %}
